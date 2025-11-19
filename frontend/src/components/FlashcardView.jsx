@@ -1,0 +1,112 @@
+import React, { useState, useEffect, useRef } from 'react';
+
+const FlashcardView = ({ cards, onClose, documentId }) => {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isFlipped, setIsFlipped] = useState(false);
+    const sessionIdRef = useRef(null);
+
+    useEffect(() => {
+        startSession();
+        return () => {
+            endSession();
+        };
+    }, []);
+
+    const startSession = async () => {
+        if (!documentId) return;
+        try {
+            const response = await fetch('http://localhost:8000/api/analytics/session/start', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    document_id: documentId,
+                    activity_type: 'flashcards'
+                })
+            });
+            if (response.ok) {
+                const data = await response.json();
+                sessionIdRef.current = data.id;
+            }
+        } catch (error) {
+            console.error('Error starting session:', error);
+        }
+    };
+
+    const endSession = async () => {
+        if (!sessionIdRef.current) return;
+        try {
+            await fetch('http://localhost:8000/api/analytics/session/end', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ session_id: sessionIdRef.current }),
+                keepalive: true
+            });
+        } catch (error) {
+            console.error('Error ending session:', error);
+        }
+    };
+
+    const handleNext = () => {
+        setIsFlipped(false);
+        setCurrentIndex((prev) => (prev + 1) % cards.length);
+    };
+
+    const handlePrev = () => {
+        setIsFlipped(false);
+        setCurrentIndex((prev) => (prev - 1 + cards.length) % cards.length);
+    };
+
+    if (!cards || cards.length === 0) return null;
+
+    return (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden">
+                <div className="p-4 border-b flex justify-between items-center">
+                    <h3 className="text-lg font-semibold text-gray-900">Flashcards ({currentIndex + 1}/{cards.length})</h3>
+                    <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div className="p-8 h-96 flex flex-col items-center justify-center bg-gray-50">
+                    <div
+                        className="relative w-full h-full cursor-pointer perspective-1000"
+                        onClick={() => setIsFlipped(!isFlipped)}
+                    >
+                        <div className={`relative w-full h-full transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
+                            {/* Front */}
+                            <div className={`absolute inset-0 backface-hidden bg-white rounded-xl shadow-md flex items-center justify-center p-8 text-center border-2 border-blue-100 ${isFlipped ? 'hidden' : ''}`}>
+                                <p className="text-xl font-medium text-gray-800">{cards[currentIndex].front}</p>
+                                <p className="absolute bottom-4 text-sm text-gray-400">Click to flip</p>
+                            </div>
+
+                            {/* Back */}
+                            <div className={`absolute inset-0 backface-hidden bg-blue-50 rounded-xl shadow-md flex items-center justify-center p-8 text-center border-2 border-blue-200 ${!isFlipped ? 'hidden' : ''}`}>
+                                <p className="text-xl text-gray-800">{cards[currentIndex].back}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="p-4 border-t bg-white flex justify-between items-center">
+                    <button
+                        onClick={handlePrev}
+                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                    >
+                        Previous
+                    </button>
+                    <button
+                        onClick={handleNext}
+                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                    >
+                        Next
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+export default FlashcardView;
