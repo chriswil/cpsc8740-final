@@ -1,0 +1,67 @@
+1. Project Plan (25%)
+Completeness and clarity of the project plan.
+    -include screenshots of final UI
+    -include screenshots of final API
+    -include screenshots of final database
+    -include screenshots of final analytics
+    -include screenshots of final chat  
+    
+Inclusion of a timeline with milestones and deliverables.
+    -include screenshots of timeline
+    -include screenshots of milestones
+    -include screenshots of deliverables
+Specificity of tasks outlined for each week.
+    -include screenshots of tasks
+    -include screenshots of timeline
+    -include screenshots of milestones
+    -include screenshots of deliverables
+
+3. AI Tool Setup (25%)
+AI Tools Setup Summary (1 page) with reasons for tool selection and setup challenges.
+    -include screenshots of AI tools
+    -include screenshots of setup challenges
+    -include screenshots of setup process
+    -include screenshots of setup results
+Appropriateness of chosen AI tools and platforms.
+
+Proper setup of the development environment.
+
+Installation and understanding of necessary libraries.
+
+6. User Interface Design and Integration (20%)
+UI Design and Integration Report with design process, technologies used, integration steps, and challenges.
+    -include screenshots of design process
+    -include screenshots of technologies used
+    -include screenshots of integration steps
+    -include screenshots of challenges
+    -include screenshots of final UI
+
+Quality of wireframes and prototypes.
+
+Functionality and usability of the front-end application.
+
+7. Testing and Refinement (10%)
+Usability Testing Report with testing process, feedback, changes made, and remaining issues.
+    -generate a Google Form survey
+    -collect 10 responses
+    -analyze responses
+    -generate report
+    -include screenshots of survey
+    -include screenshots of responses
+    -include screenshots of report
+    -include screenshots of final UI
+
+Thoroughness of usability testing and feedback collection.
+
+Effectiveness in identifying and fixing bugs.
+
+User interface based on feedback.
+
+8. Final Slide Deck and Documentation (20%)
+Final Project Report (5 pages max covering above) and covering project overview, methodology, data collection and preprocessing (if any), AI model development (if any), UI design and integration, testing and refinement, final conclusions, and future work.
+
+Completeness and clarity of the final slide deck (10-12 slides).
+
+Thorough documentation of the development process.
+
+Detailed report on challenges faced and solutions implemented.

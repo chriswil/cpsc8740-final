@@ -4,6 +4,7 @@ from typing import List, Dict, Any
 from .. import models, database
 from ..services import parser, ai
 import os
+import datetime
 
 router = APIRouter(
     prefix="/api/study",
@@ -21,11 +22,63 @@ async def create_flashcards(document_id: int, db: Session = Depends(database.get
     if not text:
         raise HTTPException(status_code=400, detail="Could not extract text from document")
     
+    # Check if flashcards already exist
+    existing_cards = db.query(models.Flashcard).filter(models.Flashcard.document_id == document_id).all()
+    if existing_cards:
+        return existing_cards
+
     # Generate flashcards
-    flashcards = ai.generate_flashcards(text)
+    flashcards_data = ai.generate_flashcards(text)
     
-    # In a real app, we would save these to the DB. For now, just return them.
-    return flashcards
+    # Save to DB
+    new_cards = []
+    for card in flashcards_data:
+        new_card = models.Flashcard(
+            document_id=document_id,
+            front=card["front"],
+            back=card["back"]
+        )
+        db.add(new_card)
+        new_cards.append(new_card)
+    
+    db.commit()
+    for card in new_cards:
+        db.refresh(card)
+        
+    return new_cards
+
+from pydantic import BaseModel
+from ..services import srs
+
+class ReviewData(BaseModel):
+    grade: int # 0-5
+
+@router.post("/flashcards/{card_id}/review")
+def review_flashcard(card_id: int, review: ReviewData, db: Session = Depends(database.get_db)):
+    card = db.query(models.Flashcard).filter(models.Flashcard.id == card_id).first()
+    if not card:
+        raise HTTPException(status_code=404, detail="Card not found")
+        
+    result = srs.calculate_review(
+        grade=review.grade,
+        repetitions=card.repetitions,
+        ease_factor=card.ease_factor,
+        interval=card.interval
+    )
+    
+    card.repetitions = result["repetitions"]
+    card.ease_factor = result["ease_factor"]
+    card.interval = result["interval"]
+    card.next_review = result["next_review"]
+    
+    db.commit()
+    return result
+
+@router.get("/flashcards/due")
+def get_due_flashcards(db: Session = Depends(database.get_db)):
+    now = datetime.datetime.utcnow()
+    due_cards = db.query(models.Flashcard).filter(models.Flashcard.next_review <= now).all()
+    return due_cards
 
 @router.post("/quiz/{document_id}")
 async def create_quiz(document_id: int, db: Session = Depends(database.get_db)):

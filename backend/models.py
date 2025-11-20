@@ -1,5 +1,5 @@
 
-from sqlalchemy import Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float
 from sqlalchemy.orm import relationship
 import datetime
 from .database import Base
@@ -41,5 +41,22 @@ class StudySession(Base):
     
     document = relationship("Document", back_populates="study_sessions")
 
-# Update Document to include relationship
+class Flashcard(Base):
+    __tablename__ = "flashcards"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    document_id = Column(Integer, ForeignKey("documents.id"))
+    front = Column(String)
+    back = Column(String)
+    
+    # SRS Fields
+    next_review = Column(DateTime, default=datetime.datetime.utcnow)
+    interval = Column(Integer, default=0) # Days
+    ease_factor = Column(Float, default=2.5)
+    repetitions = Column(Integer, default=0)
+    
+    document = relationship("Document", back_populates="flashcards")
+
+# Update Document to include relationships
 Document.study_sessions = relationship("StudySession", back_populates="document", cascade="all, delete-orphan")
+Document.flashcards = relationship("Flashcard", back_populates="document", cascade="all, delete-orphan")

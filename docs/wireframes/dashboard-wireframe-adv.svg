@@ -1,0 +1,171 @@
+<svg
+  width="1440"
+  height="800"
+  viewBox="0 0 1440 800"
+  xmlns="http://www.w3.org/2000/svg"
+>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="1440" height="800" fill="#F5F7FB"/>
+
+  <!-- Header Bar -->
+  <g id="header">
+    <rect x="0" y="0" width="1440" height="64" fill="#FFFFFF"/>
+    <!-- App Name -->
+    <text x="32" y="40" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+          font-size="20" font-weight="600" fill="#111827">
+      Study Assistant
+    </text>
+    <!-- Nav Right -->
+    <text x="1260" y="40" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+          font-size="14" fill="#6B7280">
+      Library
+    </text>
+    <text x="1330" y="40" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+          font-size="14" font-weight="600" fill="#111827">
+      Dashboard
+    </text>
+  </g>
+
+  <!-- Page Title -->
+  <g id="page-title">
+    <text x="80" y="120" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+          font-size="28" font-weight="700" fill="#111827">
+      Study Dashboard
+    </text>
+  </g>
+
+  <!-- Stat Cards Row -->
+  <g id="stat-cards" transform="translate(80,150)">
+    <!-- Card 1: Current Streak -->
+    <g id="card-current-streak">
+      <rect x="0" y="0" width="260" height="120" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+      <text x="20" y="32" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="14" font-weight="500" fill="#6B7280">
+        Current Streak
+      </text>
+      <text x="20" y="78" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="32" font-weight="700" fill="#111827">
+        2
+      </text>
+      <text x="56" y="78" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="16" fill="#6B7280">
+        days
+      </text>
+    </g>
+
+    <!-- Card 2: Total Study Time -->
+    <g id="card-total-study" transform="translate(280,0)">
+      <rect x="0" y="0" width="260" height="120" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+      <text x="20" y="32" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="14" font-weight="500" fill="#6B7280">
+        Total Study Time
+      </text>
+      <text x="20" y="78" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="32" font-weight="700" fill="#111827">
+        3
+      </text>
+      <text x="56" y="78" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="16" fill="#6B7280">
+        min
+      </text>
+    </g>
+
+    <!-- Card 3: Due for Review -->
+    <g id="card-due-for-review" transform="translate(560,0)">
+      <rect x="0" y="0" width="260" height="120" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+      <text x="20" y="32" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="14" font-weight="500" fill="#6B7280">
+        Due for Review
+      </text>
+      <text x="20" y="78" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="32" font-weight="700" fill="#111827">
+        3
+      </text>
+      <text x="56" y="78" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="16" fill="#6B7280">
+        cards
+      </text>
+    </g>
+
+    <!-- Card 4: Total Sessions -->
+    <g id="card-total-sessions" transform="translate(840,0)">
+      <rect x="0" y="0" width="260" height="120" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+      <text x="20" y="32" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="14" font-weight="500" fill="#6B7280">
+        Total Sessions
+      </text>
+      <text x="20" y="78" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="32" font-weight="700" fill="#111827">
+        16
+      </text>
+    </g>
+  </g>
+
+  <!-- Bottom Cards Row -->
+  <g id="bottom-row" transform="translate(80,310)">
+    <!-- Activity Breakdown -->
+    <g id="card-activity-breakdown">
+      <rect x="0" y="0" width="560" height="320" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+      <text x="24" y="38" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="16" font-weight="600" fill="#111827">
+        Activity Breakdown
+      </text>
+
+      <!-- Donut placeholder -->
+      <circle cx="200" cy="170" r="80" fill="none" stroke="#E5E7EB" stroke-width="18"/>
+
+      <!-- Legend -->
+      <rect x="120" y="250" width="12" height="12" rx="2" fill="#2563EB"/>
+      <text x="140" y="260" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="13" fill="#4B5563">
+        Chat
+      </text>
+
+      <rect x="200" y="250" width="12" height="12" rx="2" fill="#22C55E"/>
+      <text x="220" y="260" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="13" fill="#4B5563">
+        Flashcards
+      </text>
+
+      <rect x="310" y="250" width="12" height="12" rx="2" fill="#F59E0B"/>
+      <text x="330" y="260" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="13" fill="#4B5563">
+        Quiz
+      </text>
+    </g>
+
+    <!-- Weekly Progress -->
+    <g id="card-weekly-progress" transform="translate(580,0)">
+      <rect x="0" y="0" width="560" height="320" rx="12" fill="#FFFFFF" stroke="#E5E7EB"/>
+      <text x="24" y="38" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="16" font-weight="600" fill="#111827">
+        Weekly Progress
+      </text>
+
+      <!-- Axis baseline -->
+      <line x1="80" y1="240" x2="500" y2="240" stroke="#E5E7EB" stroke-width="1"/>
+
+      <!-- Day labels -->
+      <text x="90"  y="260" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="12" fill="#6B7280">Thu</text>
+      <text x="140" y="260" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="12" fill="#6B7280">Fri</text>
+      <text x="190" y="260" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="12" fill="#6B7280">Sat</text>
+      <text x="240" y="260" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="12" fill="#6B7280">Sun</text>
+      <text x="290" y="260" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="12" fill="#6B7280">Mon</text>
+      <text x="340" y="260" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="12" fill="#6B7280">Tue</text>
+      <text x="390" y="260" font-family="system-ui, -apple-system, BlinkMacSystemFont, sans-serif"
+            font-size="12" fill="#6B7280">Wed</text>
+
+      <!-- Bars (only Tue & Wed) -->
+      <rect x="344" y="170" width="24" height="70" rx="4" fill="#4F46E5"/>
+      <rect x="394" y="170" width="24" height="70" rx="4" fill="#4F46E5"/>
+    </g>
+  </g>
+
+</svg>

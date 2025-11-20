@@ -1,0 +1,202 @@
+AI-Powered Personal Study Assistant
+
+
+
+Application Theme and Purpose
+
+A clean, modern, and approachable educational platform that transforms passive learning materials into active study experiences through artificial intelligence.
+
+Problem Statement
+
+Students, researchers, and lifelong learners struggle to efficiently process and retain information from multiple sources across different subjects. Reading through dense textbooks, research papers, and lecture notes is time-consuming, and traditional study methods often fail to promote deep understanding and long-term retention. Complex academic materials - especially advanced research papers - can be overwhelming without structured approaches to break them down and internalize key concepts.
+
+Current solutions are fragmented: note-taking apps don't help with active recall, flashcard tools require manual creation, and AI chatbots lack context about your specific materials. This forces learners to juggle multiple applications and spend valuable time on administrative tasks rather than actual learning.
+
+Solution
+
+The AI-Powered Personal Study Assistant is a unified platform that transforms how people learn from complex materials. By combining intelligent document processing with active learning techniques, the application:
+
+Processes diverse materials - Upload PDFs, PowerPoints, Word documents, research papers, and lecture notes
+Generates study aids automatically - Create flashcards, quizzes, and study guides from your uploaded content using AI
+Provides conversational AI support - Ask questions and get explanations grounded in your specific materials
+Tracks learning progress - Visualize which concepts you've mastered and what needs more attention
+Implements spaced repetition - Smart scheduling tells you exactly what to review and when for optimal retention
+
+Research Findings
+
+Competitive Landscape Analysis
+The educational technology market is fragmented, with existing solutions each addressing only part of the learning workflow:
+
+Google NotebookLM - Excellent for document exploration and understanding but lacks active learning tools (no flashcards, quizzes, or spaced repetition)
+Quizlet - Strong flashcard platform but requires manual creation and has limited AI capabilities
+Notion AI - Powerful note-taking with AI but not education-focused and overwhelming for simple study tasks
+Anki - Best-in-class spaced repetition but outdated interface, steep learning curve, and no AI features
+Knowt - AI flashcard generation but limited document support and basic summarization
+ChatGPT/Claude - Versatile AI but no file management, progress tracking, or study-specific features
+
+
+Competitive Advantage:
+
+This application can fill the critical gap between understanding content (NotebookLM) and mastering it (Quizlet + Anki), with intelligent automation throughout. 
+
+
+Feature List
+
+Document Management
+
+Multi-format upload support (PDF, DOCX, PPTX, images with OCR, plain text)
+Automatic course and subject categorization with customizable tags
+Intelligent full-text search across all documents
+Document preview and annotation
+AI-Powered Content Processing
+
+Automatic summarization with adjustable length (100-500 words)
+Key concept and definition extraction
+Chapter and section outline generation
+Important information highlighting
+Research paper methodology and findings extraction
+Flashcard Generation
+
+Auto-generate flashcards from any uploaded document
+Multiple formats: term/definition, Q&A, true/false, cloze deletion
+Difficulty level tagging (beginner, intermediate, advanced)
+Manual editing and customization capabilities
+Export to Quizlet format for compatibility
+Quiz Creation
+
+AI-generated questions: multiple choice, fill-in-blank, short answer
+Customizable difficulty levels and question counts
+Instant grading with detailed explanations
+Performance tracking and score history
+Wrong answer review and remediation
+AI Study Chat
+
+Conversational interface for asking questions about your materials
+Context-aware responses grounded in uploaded documents
+Multi-turn conversations with memory
+Source citations linking back to original content
+Concept clarification with examples and analogies
+Handles complex research paper questions (methodologies, theories, equations)
+Spaced Repetition System
+
+Automated review scheduling based on performance
+Adaptive intervals using proven algorithms (Leitner system)
+Daily review queue with time estimates
+Difficulty rating affects next review timing (Hard/Medium/Easy)
+Review reminders and notifications
+Progress Tracking
+
+Study time logging by course and document
+Quiz scores and performance trends over time
+Topic mastery indicators (not started, learning, proficient, mastered)
+Study streaks and consistency metrics
+Weekly and monthly activity summaries
+
+
+Design Process Documentation
+
+
+
+Phase 1: User Research (Week 1-2)
+
+User Personas Developed:
+
+Emma (Pre-Med Student) - Managing 5 courses, time-constrained, tech-savvy
+Marcus (Engineering Student) - Struggling with complex concepts, needs Q&A support
+Aisha (Graduate Student) - Part-time learner, needs efficient mobile access for research papers
+David (Senior Software Engineer) - Stay current with emerging technologies, understand AI/ML research, advance career
+Key User Journeys Mapped:
+
+First-time document upload → organized library
+Document selection → AI study material generation
+Active study session with AI chat
+Spaced repetition review workflow
+Phase 2: Information Architecture
+
+Site Structure:
+
+Dashboard → My Library (Documents by course/subject)
+         → Study Tools (Flashcards, Quizzes, Study Guides, AI Chat)
+         → Progress (Overview, Analytics, History)
+         → Settings (Profile, Preferences, Accessibility)
+Phase 3: Wireframe - Low-Fidelity (Week 2-3)
+
+Key Screens Designed (Grayscale, Layout-Focused):
+
+Main Dashboard
+Designed using Figma with AI prompting
+Updated Figma-generated code with Claude Code
+
+
+
+
+Phase 4: Mid-Fidelity Prototypes (Week 3-4)
+
+Design System Applied:
+
+Work on WCAG compliance
+Flesh out navigation patterns, input fields, buttons
+
+
+Phase 5: High-Fidelity Prototypes (Week 4-5)
+
+Polish & Interactivity:
+
+Real content and imagery
+Micro-interactions and transitions (300ms ease-in-out)
+Loading states and skeleton screens
+Error and success states with helpful messaging
+Modal overlays and dropdown menus
+Responsive mobile versions (375px width)
+Key Screens Finalized:
+
+Login/Signup flow (3 screens)
+Onboarding tutorial (4 steps)
+Dashboard (desktop + mobile)
+Document library + detail view
+AI generation results (summary, flashcards, quiz)
+Study modes (flashcard session, quiz taking)
+AI chat interface with citations
+Progress analytics dashboard
+Settings and accessibility options
+Mobile responsive versions of top 5 screens
+Figma Prototype Features:
+
+Fully clickable prototype with realistic user flows
+Smart animate transitions between screens
+Overflow scrolling for long content
+Form validation states
+Navigation between all major sections
+Accessibility Implementation, WCAG 2.1 AA Compliance (Week 6)
+
+Color & Contrast:
+
+All text meets 4.5:1 minimum contrast ratio
+Color + icons + text for status (never color alone)
+Tested for deuteranopia, protanopia, tritanopia
+Keyboard Navigation:
+
+Logical tab order documented
+Visible focus indicators (2px outline)
+Skip navigation links
+Keyboard shortcuts for common actions
+Possible Screen Reader Support:
+
+Semantic HTML5 structure
+ARIA labels for all interactive elements
+Alt text for images and icons
+Live regions for dynamic content
+Possible Additional Features:
+
+Dark mode support (maintains contrast ratios)
+Adjustable font size options
+Touch targets minimum 44x44px (mobile)
+Reduced motion option for animations
+OpenDyslexic font alternative
+Phase 6: User Testing & Iteration (Week 7-8)
+
+Testing Protocol:
+
+Task-based scenarios: onboarding, upload, generate flashcards, take quiz, use AI chat
+Measured: completion rate, time on task, errors, satisfaction (1-5), qualitative feedback
+Gather feedback on accessibility

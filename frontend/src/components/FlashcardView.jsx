@@ -56,6 +56,22 @@ const FlashcardView = ({ cards, onClose, documentId }) => {
         setCurrentIndex((prev) => (prev - 1 + cards.length) % cards.length);
     };
 
+    const handleRate = async (grade) => {
+        const currentCard = cards[currentIndex];
+        if (!currentCard.id) return;
+
+        try {
+            await fetch(`http://localhost:8000/api/study/flashcards/${currentCard.id}/review`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ grade })
+            });
+            handleNext();
+        } catch (error) {
+            console.error('Error submitting review:', error);
+        }
+    };
+
     if (!cards || cards.length === 0) return null;
 
     return (
@@ -91,18 +107,29 @@ const FlashcardView = ({ cards, onClose, documentId }) => {
                 </div>
 
                 <div className="p-4 border-t bg-white flex justify-between items-center">
-                    <button
-                        onClick={handlePrev}
-                        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
-                    >
-                        Previous
-                    </button>
-                    <button
-                        onClick={handleNext}
-                        className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
-                    >
-                        Next
-                    </button>
+                    {isFlipped ? (
+                        <div className="flex space-x-2 w-full justify-center">
+                            <button onClick={() => handleRate(0)} className="px-4 py-2 bg-red-100 text-red-700 rounded hover:bg-red-200 font-medium">Again</button>
+                            <button onClick={() => handleRate(3)} className="px-4 py-2 bg-yellow-100 text-yellow-700 rounded hover:bg-yellow-200 font-medium">Hard</button>
+                            <button onClick={() => handleRate(4)} className="px-4 py-2 bg-blue-100 text-blue-700 rounded hover:bg-blue-200 font-medium">Good</button>
+                            <button onClick={() => handleRate(5)} className="px-4 py-2 bg-green-100 text-green-700 rounded hover:bg-green-200 font-medium">Easy</button>
+                        </div>
+                    ) : (
+                        <div className="flex justify-between w-full">
+                            <button
+                                onClick={handlePrev}
+                                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50"
+                            >
+                                Previous
+                            </button>
+                            <button
+                                onClick={handleNext}
+                                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                            >
+                                Next
+                            </button>
+                        </div>
+                    )}
                 </div>
             </div>
         </div>

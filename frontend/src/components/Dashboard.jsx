@@ -4,24 +4,38 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 const Dashboard = () => {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [dueCount, setDueCount] = useState(0);
 
     useEffect(() => {
-        fetchStats();
-    }, []);
-
-    const fetchStats = async () => {
-        try {
-            const response = await fetch('http://localhost:8000/api/analytics/stats');
-            if (response.ok) {
-                const data = await response.json();
-                setStats(data);
+        const fetchStats = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/api/analytics/stats');
+                if (response.ok) {
+                    const data = await response.json();
+                    setStats(data);
+                }
+            } catch (error) {
+                console.error('Error fetching stats:', error);
+            } finally {
+                setLoading(false);
             }
-        } catch (error) {
-            console.error('Error fetching stats:', error);
-        } finally {
-            setLoading(false);
-        }
-    };
+        };
+
+        const fetchDueCards = async () => {
+            try {
+                const response = await fetch('http://localhost:8000/api/study/flashcards/due');
+                if (response.ok) {
+                    const data = await response.json();
+                    setDueCount(data.length);
+                }
+            } catch (error) {
+                console.error('Error fetching due cards:', error);
+            }
+        };
+
+        fetchStats();
+        fetchDueCards();
+    }, []);
 
     if (loading) {
         return (
@@ -48,39 +62,50 @@ const Dashboard = () => {
             <h1 className="text-3xl font-bold text-gray-900 mb-8">Study Dashboard</h1>
 
             {/* Top Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
                 {/* Streak Card */}
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center space-x-4">
-                    <div className="p-4 bg-orange-100 rounded-full text-orange-600 text-2xl">
-                        🔥
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500 font-medium">Current Streak</p>
-                        <p className="text-3xl font-bold text-gray-900">{stats.current_streak} Days</p>
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-sm text-gray-500">Current Streak</p>
+                            <p className="text-3xl font-bold text-gray-900">{stats.current_streak} <span className="text-lg">days</span></p>
+                        </div>
+                        <div className="text-4xl">🔥</div>
                     </div>
                 </div>
 
                 {/* Total Time Card */}
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center space-x-4">
-                    <div className="p-4 bg-blue-100 rounded-full text-blue-600 text-2xl">
-                        ⏱️
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-sm text-gray-500">Total Study Time</p>
+                            <p className="text-3xl font-bold text-gray-900">{stats.total_minutes} <span className="text-lg">min</span></p>
+                        </div>
+                        <div className="text-4xl">⏱️</div>
                     </div>
-                    <div>
-                        <p className="text-sm text-gray-500 font-medium">Total Study Time</p>
-                        <p className="text-3xl font-bold text-gray-900">{stats.total_minutes} mins</p>
+                </div>
+
+                {/* Due Cards Card */}
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-sm text-gray-500">Due for Review</p>
+                            <p className="text-3xl font-bold text-blue-600">{dueCount} <span className="text-lg">cards</span></p>
+                        </div>
+                        <div className="text-4xl">🧠</div>
                     </div>
                 </div>
 
                 {/* Sessions Card */}
-                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100 flex items-center space-x-4">
-                    <div className="p-4 bg-green-100 rounded-full text-green-600 text-2xl">
-                        📚
-                    </div>
-                    <div>
-                        <p className="text-sm text-gray-500 font-medium">Total Sessions</p>
-                        <p className="text-3xl font-bold text-gray-900">
-                            {Object.values(stats.activity_breakdown || {}).reduce((a, b) => a + b, 0)}
-                        </p>
+                <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <p className="text-sm text-gray-500">Total Sessions</p>
+                            <p className="text-3xl font-bold text-gray-900">
+                                {Object.values(stats.activity_breakdown || {}).reduce((a, b) => a + b, 0)}
+                            </p>
+                        </div>
+                        <div className="text-4xl">📚</div>
                     </div>
                 </div>
             </div>
