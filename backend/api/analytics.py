@@ -153,9 +153,14 @@ def get_stats(timezone_offset: int = 0, db: Session = Depends(database.get_db)):
         end_of_day_local = datetime.datetime.combine(current_day_date + datetime.timedelta(days=1), datetime.time.min)
         
         # Convert to UTC for DB query
-        # astimezone() on naive datetime assumes local time, converts to target
-        start_of_day_utc = start_of_day_local.astimezone(datetime.timezone.utc)
-        end_of_day_utc = end_of_day_local.astimezone(datetime.timezone.utc)
+        # UTC = Local + Offset (minutes)
+        # We use the offset provided by the client
+        start_of_day_utc = start_of_day_local + datetime.timedelta(minutes=timezone_offset)
+        end_of_day_utc = end_of_day_local + datetime.timedelta(minutes=timezone_offset)
+        
+        # Ensure they are timezone-aware (UTC) for SQLAlchemy comparison
+        start_of_day_utc = start_of_day_utc.replace(tzinfo=datetime.timezone.utc)
+        end_of_day_utc = end_of_day_utc.replace(tzinfo=datetime.timezone.utc)
         
         # Ensure db timestamps are treated as UTC for comparison if they are naive
         # (SQLAlchemy + SQLite often returns naive datetimes)
