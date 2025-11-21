@@ -16,7 +16,7 @@ services:
       # Note: CORS_ORIGINS must be added manually to match the frontend URL
 
   # Frontend Static Site
-  - type: static
+  - type: pstatic
     name: studyai-frontend
     rootDir: frontend
     buildCommand: npm install && npm run build
