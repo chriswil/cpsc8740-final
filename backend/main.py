@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .database import engine, Base
-from .api import documents, study_tools, chat, analytics
+from database import engine, Base
+from api import documents, study_tools, chat, analytics
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
