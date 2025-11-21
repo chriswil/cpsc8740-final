@@ -42,7 +42,7 @@ function App() {
         {activeTab === 'library' ? (
           <div className="space-y-8">
             <section>
-              <UploadZone onUploadSuccess={handleUploadSuccess} />
+              <UploadZone onUploadComplete={handleUploadSuccess} />
             </section>
 
             <section>
