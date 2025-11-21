@@ -139,8 +139,7 @@ def get_stats(timezone_offset: int = 0, db: Session = Depends(database.get_db)):
                     break
     
     # 4. Daily History (Last 7 days) - Using LOCAL time boundaries
-    # Get local today
-    today_local = datetime.datetime.now().date()
+    # Get local today (already calculated above)
     
     daily_stats = []
     # Last 7 days including today
