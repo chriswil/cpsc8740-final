@@ -15,12 +15,12 @@ services:
       # Note: API Keys (OPENAI_API_KEY, ANTHROPIC_API_KEY) must be added manually in the Dashboard
       # Note: CORS_ORIGINS must be added manually to match the frontend URL
 
-  # Frontend Static Site
-  - type: static_site
+  # Frontend (Dockerized Nginx)
+  - type: web
     name: studyai-frontend
+    runtime: docker
     rootDir: frontend
-    buildCommand: npm install && npm run build
-    publishDir: dist
+    plan: free
     envVars:
       - key: VITE_API_URL
         fromService:
