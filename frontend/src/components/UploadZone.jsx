@@ -39,7 +39,7 @@ const UploadZone = ({ onUploadComplete }) => {
         formData.append('file', file);
 
         try {
-            const response = await fetch('${API_BASE_URL}/api/documents/upload', {
+            const response = await fetch(`${API_BASE_URL}/api/documents/upload`, {
                 method: 'POST',
                 body: formData,
             });
