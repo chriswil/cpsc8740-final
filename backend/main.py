@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+import os
 from database import engine, Base
 from api import documents, study_tools, chat, analytics
 
@@ -9,9 +10,11 @@ Base.metadata.create_all(bind=engine)
 app = FastAPI(title="AI Study Assistant API")
 
 # Configure CORS
+origins = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],  # Vite default port
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
