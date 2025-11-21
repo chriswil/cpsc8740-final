@@ -1,8 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from typing import List, Dict, Any
-from .. import models, database
-from ..services import parser, ai
+import models, database
+from services import parser, ai
 import os
 import datetime
 
@@ -48,7 +48,7 @@ async def create_flashcards(document_id: int, db: Session = Depends(database.get
     return new_cards
 
 from pydantic import BaseModel
-from ..services import srs
+from services import srs
 
 class ReviewData(BaseModel):
     grade: int # 0-5

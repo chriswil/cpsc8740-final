@@ -3,8 +3,9 @@ from sqlalchemy.orm import Session
 from typing import List
 import shutil
 import os
-from .. import models, schemas, database
-from ..services import parser, ai
+from models import Document
+import models, schemas, database
+from services import parser, ai
 
 router = APIRouter(
     prefix="/api/documents",

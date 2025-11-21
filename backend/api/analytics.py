@@ -4,7 +4,7 @@ from sqlalchemy import func
 from typing import List, Dict, Any
 import datetime
 from pydantic import BaseModel
-from .. import models, database
+import models, database
 
 router = APIRouter(
     prefix="/api/analytics",
