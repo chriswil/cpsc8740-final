@@ -71,7 +71,7 @@ def end_session(session_data: SessionEnd, db: Session = Depends(database.get_db)
     return session
 
 @router.get("/stats")
-def get_stats(db: Session = Depends(database.get_db)):
+def get_stats(timezone_offset: int = 0, db: Session = Depends(database.get_db)):
     # 1. Total Study Time
     total_seconds = db.query(func.sum(models.StudySession.duration_seconds)).scalar() or 0
     
@@ -83,14 +83,22 @@ def get_stats(db: Session = Depends(database.get_db)):
     
     activity_stats = {type_: count for type_, count in breakdown}
     
+    # Calculate client-side "today"
+    # timezone_offset is in minutes (e.g., 300 for EST).
+    # MDN: offset is positive if local is behind UTC.
+    # So Local = UTC - offset
+    utc_now = datetime.datetime.now(datetime.timezone.utc)
+    client_now = utc_now - datetime.timedelta(minutes=timezone_offset)
+    today_local = client_now.date()
+    
     # 3. Current Streak
     # Get all unique dates where a session occurred, converted to LOCAL time
     sessions = db.query(models.StudySession.start_time).order_by(models.StudySession.start_time.desc()).all()
     
     streak = 0
     if sessions:
-        # Use local time for "today"
-        today = datetime.datetime.now().date()
+        # Use calculated local today
+        today = today_local
         
         # Convert all session timestamps to local dates
         # Note: session.start_time is UTC (tz-aware or naive-as-utc depending on driver)

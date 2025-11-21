@@ -10,7 +10,8 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/analytics/stats`);
+                const offset = new Date().getTimezoneOffset();
+                const response = await fetch(`${API_BASE_URL}/api/analytics/stats?timezone_offset=${offset}`);
                 if (response.ok) {
                     const data = await response.json();
                     setStats(data);
