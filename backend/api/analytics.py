@@ -142,9 +142,15 @@ def get_stats(timezone_offset: int = 0, db: Session = Depends(database.get_db)):
     # Get local today (already calculated above)
     
     daily_stats = []
-    # Last 7 days including today
-    for i in range(6, -1, -1):
-        current_day_date = today_local - datetime.timedelta(days=i)
+    # Calculate start of the current week (Sunday)
+    # weekday(): Mon=0, Tue=1, ... Sat=5, Sun=6
+    # days_since_sunday = (today_local.weekday() + 1) % 7
+    days_since_sunday = (today_local.weekday() + 1) % 7
+    start_of_week = today_local - datetime.timedelta(days=days_since_sunday)
+    
+    # Generate stats for this week (Sunday to Saturday)
+    for i in range(7):
+        current_day_date = start_of_week + datetime.timedelta(days=i)
         
         # Create local datetime range for this day
         # midnight local
