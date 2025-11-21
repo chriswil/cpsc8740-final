@@ -2,7 +2,7 @@
 from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, Float
 from sqlalchemy.orm import relationship
 import datetime
-from .database import Base
+from database import Base
 
 class Document(Base):
     __tablename__ = "documents"
