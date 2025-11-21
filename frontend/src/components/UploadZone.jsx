@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { useDropzone } from 'react-dropzone';
 import API_BASE_URL from '../config';
 
 const UploadZone = ({ onUploadComplete }) => {
