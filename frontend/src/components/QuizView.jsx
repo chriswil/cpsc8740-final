@@ -17,7 +17,7 @@ const QuizView = ({ questions, onClose, documentId }) => {
     const startSession = async () => {
         if (!documentId) return;
         try {
-            const response = await fetch('${API_BASE_URL}/api/analytics/session/start', {
+            const response = await fetch(`${API_BASE_URL}/api/analytics/session/start`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -37,7 +37,7 @@ const QuizView = ({ questions, onClose, documentId }) => {
     const endSession = async () => {
         if (!sessionIdRef.current) return;
         try {
-            await fetch('${API_BASE_URL}/api/analytics/session/end', {
+            await fetch(`${API_BASE_URL}/api/analytics/session/end`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ session_id: sessionIdRef.current }),

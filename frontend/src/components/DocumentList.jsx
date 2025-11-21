@@ -19,7 +19,7 @@ const DocumentList = ({ refreshTrigger }) => {
 
     const fetchDocuments = async () => {
         try {
-            const response = await fetch('${API_BASE_URL}/api/documents/');
+            const response = await fetch(`${API_BASE_URL}/api/documents/`);
             if (response.ok) {
                 const data = await response.json();
                 setDocuments(data);

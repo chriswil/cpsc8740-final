@@ -10,7 +10,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await fetch('${API_BASE_URL}/api/analytics/stats');
+                const response = await fetch(`${API_BASE_URL}/api/analytics/stats`);
                 if (response.ok) {
                     const data = await response.json();
                     setStats(data);
@@ -24,7 +24,7 @@ const Dashboard = () => {
 
         const fetchDueCards = async () => {
             try {
-                const response = await fetch('${API_BASE_URL}/api/study/flashcards/due');
+                const response = await fetch(`${API_BASE_URL}/api/study/flashcards/due`);
                 if (response.ok) {
                     const data = await response.json();
                     setDueCount(data.length);
