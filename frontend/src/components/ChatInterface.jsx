@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
+import ReactMarkdown from 'react-markdown';
+import API_BASE_URL from '../config';
 
 const ChatInterface = ({ documentId, documentTitle, onClose }) => {
     const [messages, setMessages] = useState([]);
@@ -18,7 +20,7 @@ const ChatInterface = ({ documentId, documentTitle, onClose }) => {
     const startSession = async () => {
         if (!documentId) return;
         try {
-            const response = await fetch('http://localhost:8000/api/analytics/session/start', {
+            const response = await fetch('${API_BASE_URL}/api/analytics/session/start', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -38,7 +40,7 @@ const ChatInterface = ({ documentId, documentTitle, onClose }) => {
     const endSession = async () => {
         if (!sessionIdRef.current) return;
         try {
-            await fetch('http://localhost:8000/api/analytics/session/end', {
+            await fetch('${API_BASE_URL}/api/analytics/session/end', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ session_id: sessionIdRef.current }),
@@ -59,7 +61,7 @@ const ChatInterface = ({ documentId, documentTitle, onClose }) => {
 
     const fetchHistory = async () => {
         try {
-            const response = await fetch(`http://localhost:8000/api/chat/history/${documentId}`);
+            const response = await fetch(`${API_BASE_URL}/api/chat/history/${documentId}`);
             if (response.ok) {
                 const data = await response.json();
                 setMessages(data);
@@ -86,7 +88,7 @@ const ChatInterface = ({ documentId, documentTitle, onClose }) => {
         setMessages(prev => [...prev, tempUserMsg]);
 
         try {
-            const response = await fetch(`http://localhost:8000/api/chat/send/${documentId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/chat/send/${documentId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

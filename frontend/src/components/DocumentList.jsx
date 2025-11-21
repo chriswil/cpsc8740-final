@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import FlashcardView from './FlashcardView';
 import QuizView from './QuizView';
 import ChatInterface from './ChatInterface';
+import API_BASE_URL from '../config';
 
 const DocumentList = ({ refreshTrigger }) => {
     const [documents, setDocuments] = useState([]);
@@ -18,7 +19,7 @@ const DocumentList = ({ refreshTrigger }) => {
 
     const fetchDocuments = async () => {
         try {
-            const response = await fetch('http://localhost:8000/api/documents/');
+            const response = await fetch('${API_BASE_URL}/api/documents/');
             if (response.ok) {
                 const data = await response.json();
                 setDocuments(data);
@@ -33,7 +34,7 @@ const DocumentList = ({ refreshTrigger }) => {
     const generateFlashcards = async (docId) => {
         setGeneratingId(docId);
         try {
-            const response = await fetch(`http://localhost:8000/api/study/flashcards/${docId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/study/flashcards/${docId}`, {
                 method: 'POST'
             });
             if (response.ok) {
@@ -55,7 +56,7 @@ const DocumentList = ({ refreshTrigger }) => {
     const generateQuiz = async (docId) => {
         setGeneratingId(docId);
         try {
-            const response = await fetch(`http://localhost:8000/api/study/quiz/${docId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/study/quiz/${docId}`, {
                 method: 'POST'
             });
             if (response.ok) {
@@ -79,7 +80,7 @@ const DocumentList = ({ refreshTrigger }) => {
         if (!window.confirm('Are you sure you want to delete this document?')) return;
 
         try {
-            const response = await fetch(`http://localhost:8000/api/documents/${docId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/documents/${docId}`, {
                 method: 'DELETE'
             });
 
@@ -99,7 +100,7 @@ const DocumentList = ({ refreshTrigger }) => {
         const newCategory = prompt("Enter new category:", currentCategory);
         if (newCategory && newCategory !== currentCategory) {
             try {
-                const response = await fetch(`http://localhost:8000/api/documents/${docId}/category?category=${encodeURIComponent(newCategory)}`, {
+                const response = await fetch(`${API_BASE_URL}/api/documents/${docId}/category?category=${encodeURIComponent(newCategory)}`, {
                     method: 'PUT'
                 });
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
+import API_BASE_URL from '../config';
 
 const Dashboard = () => {
     const [stats, setStats] = useState(null);
@@ -9,7 +10,7 @@ const Dashboard = () => {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/analytics/stats');
+                const response = await fetch('${API_BASE_URL}/api/analytics/stats');
                 if (response.ok) {
                     const data = await response.json();
                     setStats(data);
@@ -23,7 +24,7 @@ const Dashboard = () => {
 
         const fetchDueCards = async () => {
             try {
-                const response = await fetch('http://localhost:8000/api/study/flashcards/due');
+                const response = await fetch('${API_BASE_URL}/api/study/flashcards/due');
                 if (response.ok) {
                     const data = await response.json();
                     setDueCount(data.length);
