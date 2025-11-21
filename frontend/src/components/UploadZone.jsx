@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import API_BASE_URL from '../config';
 
 const UploadZone = ({ onUploadComplete }) => {
