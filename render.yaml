@@ -23,10 +23,7 @@ services:
     plan: free
     envVars:
       - key: VITE_API_URL
-        fromService:
-          type: web
-          name: studyai-backend
-          property: url
+        value: placeholder_update_in_dashboard
 
 databases:
   - name: studyai-db
