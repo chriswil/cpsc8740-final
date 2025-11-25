@@ -45,8 +45,6 @@ const DocumentList = ({ refreshTrigger }) => {
         const docId = flashcardConfig.docId;
         setFlashcardConfig(null); // Close modal
 
-        setFlashcardConfig(null); // Close modal
-
         setGeneratingState({ docId, type: 'flashcards' });
         try {
             const response = await fetch(`${API_BASE_URL}/api/study/flashcards/${docId}?num_cards=${flashcardCount}`, {
@@ -67,7 +65,7 @@ const DocumentList = ({ refreshTrigger }) => {
             console.error('Error generating flashcards:', error);
             alert('Failed to generate flashcards. Check console for details.');
         } finally {
-            setGeneratingId(null);
+            setGeneratingState(null);
         }
     };
 
@@ -89,7 +87,7 @@ const DocumentList = ({ refreshTrigger }) => {
             console.error('Error generating flashcards:', error);
             alert('Failed to generate flashcards. Check console for details.');
         } finally {
-            setGeneratingId(null);
+            setGeneratingState(null);
         }
     };
 
@@ -111,7 +109,7 @@ const DocumentList = ({ refreshTrigger }) => {
             console.error('Error generating quiz:', error);
             alert('Failed to generate quiz. Check console for details.');
         } finally {
-            setGeneratingId(null);
+            setGeneratingState(null);
         }
     };
 
