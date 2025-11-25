@@ -12,7 +12,7 @@ router = APIRouter(
 )
 
 @router.post("/flashcards/{document_id}")
-async def create_flashcards(document_id: int, db: Session = Depends(database.get_db)):
+async def create_flashcards(document_id: int, num_cards: int = 5, db: Session = Depends(database.get_db)):
     document = db.query(models.Document).filter(models.Document.id == document_id).first()
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
@@ -28,7 +28,7 @@ async def create_flashcards(document_id: int, db: Session = Depends(database.get
         return existing_cards
 
     # Generate flashcards
-    flashcards_data = ai.generate_flashcards(text)
+    flashcards_data = ai.generate_flashcards(text, num_cards=num_cards)
     
     # Save to DB
     new_cards = []
