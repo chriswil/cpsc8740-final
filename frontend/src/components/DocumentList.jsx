@@ -45,7 +45,9 @@ const DocumentList = ({ refreshTrigger }) => {
         const docId = flashcardConfig.docId;
         setFlashcardConfig(null); // Close modal
 
-        setGeneratingId(docId);
+        setFlashcardConfig(null); // Close modal
+
+        setGeneratingState({ docId, type: 'flashcards' });
         try {
             const response = await fetch(`${API_BASE_URL}/api/study/flashcards/${docId}?num_cards=${flashcardCount}`, {
                 method: 'POST'
