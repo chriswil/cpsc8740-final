@@ -10,7 +10,7 @@ const DocumentList = ({ refreshTrigger }) => {
     const [activeFlashcards, setActiveFlashcards] = useState(null);
     const [activeQuiz, setActiveQuiz] = useState(null);
     const [activeChat, setActiveChat] = useState(null); // { id: 1, title: "..." }
-    const [generatingId, setGeneratingId] = useState(null);
+    const [generatingState, setGeneratingState] = useState(null); // { docId: 1, type: 'flashcards' | 'quiz' }
     const [searchQuery, setSearchQuery] = useState('');
 
     // Flashcard Configuration Modal State
@@ -70,7 +70,7 @@ const DocumentList = ({ refreshTrigger }) => {
     };
 
     const generateFlashcards = async (docId) => {
-        setGeneratingId(docId);
+        setGeneratingState({ docId, type: 'flashcards' });
         try {
             const response = await fetch(`${API_BASE_URL}/api/study/flashcards/${docId}`, {
                 method: 'POST'
@@ -92,7 +92,7 @@ const DocumentList = ({ refreshTrigger }) => {
     };
 
     const generateQuiz = async (docId) => {
-        setGeneratingId(docId);
+        setGeneratingState({ docId, type: 'quiz' });
         try {
             const response = await fetch(`${API_BASE_URL}/api/study/quiz/${docId}`, {
                 method: 'POST'
@@ -233,10 +233,10 @@ const DocumentList = ({ refreshTrigger }) => {
                                 </button>
                                 <button
                                     onClick={() => initiateFlashcardGeneration(doc.id)}
-                                    disabled={generatingId === doc.id}
+                                    disabled={generatingState?.docId === doc.id}
                                     className="flex-1 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 disabled:opacity-50"
                                 >
-                                    {generatingId === doc.id ? (
+                                    {generatingState?.docId === doc.id && generatingState?.type === 'flashcards' ? (
                                         <>
                                             <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
@@ -248,10 +248,10 @@ const DocumentList = ({ refreshTrigger }) => {
                                 </button>
                                 <button
                                     onClick={() => generateQuiz(doc.id)}
-                                    disabled={generatingId === doc.id}
+                                    disabled={generatingState?.docId === doc.id}
                                     className="flex-1 px-3 py-1.5 text-xs font-medium text-purple-600 bg-purple-50 rounded-md hover:bg-purple-100 disabled:opacity-50"
                                 >
-                                    {generatingId === doc.id ? (
+                                    {generatingState?.docId === doc.id && generatingState?.type === 'quiz' ? (
                                         <>
                                             <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-purple-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                                                 <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
