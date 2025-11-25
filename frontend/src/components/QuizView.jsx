@@ -115,7 +115,15 @@ const QuizView = ({ questions, onClose, documentId }) => {
                                             className={className}
                                             disabled={showResults}
                                         >
-                                            {option}
+                                            <span className="flex items-center justify-between">
+                                                <span>{option}</span>
+                                                {showResults && isCorrect && (
+                                                    <span className="ml-2 text-green-700 font-bold" aria-label="Correct answer">✓</span>
+                                                )}
+                                                {showResults && isSelected && !isCorrect && (
+                                                    <span className="ml-2 text-red-700 font-bold" aria-label="Incorrect answer">✗</span>
+                                                )}
+                                            </span>
                                         </button>
                                     );
                                 })}
