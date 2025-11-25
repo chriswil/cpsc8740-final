@@ -58,15 +58,31 @@ const UploadZone = ({ onUploadComplete }) => {
         }
     };
 
+    const handleClick = () => {
+        document.getElementById('fileInput').click();
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleClick();
+        }
+    };
+
     return (
         <div
-            className={`w-full p-8 border-2 border-dashed rounded-xl transition-colors cursor-pointer text-center ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-blue-300 bg-blue-50 hover:bg-blue-100'
+            role="button"
+            tabIndex={0}
+            aria-label="Upload study materials. Press Enter or Space to select files, or drag and drop files here."
+            aria-disabled={isUploading}
+            className={`w-full p-8 border-2 border-dashed rounded-xl transition-colors cursor-pointer text-center focus:outline-none focus:ring-2 focus:ring-blue-500 ${isDragging ? 'border-blue-500 bg-blue-50' : 'border-blue-300 bg-blue-50 hover:bg-blue-100'
                 }`}
             onDragEnter={handleDrag}
             onDragLeave={handleDrag}
             onDragOver={handleDrag}
             onDrop={handleDrop}
-            onClick={() => document.getElementById('fileInput').click()}
+            onClick={handleClick}
+            onKeyDown={handleKeyDown}
         >
             <input
                 type="file"
