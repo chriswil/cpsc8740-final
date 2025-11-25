@@ -218,10 +218,8 @@ const ChatInterface = ({ documentId, documentTitle, onClose }) => {
                     </div>
                 </div>
             </div>
-        </div>
         </FocusTrap >
     );
 };
 
 export default ChatInterface;
-```
