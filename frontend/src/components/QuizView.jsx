@@ -78,6 +78,7 @@ const QuizView = ({ questions, onClose, documentId }) => {
 
     return (
         <FocusTrap
+            active={true}
             focusTrapOptions={{
                 initialFocus: false,
                 escapeDeactivates: false,

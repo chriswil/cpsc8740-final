@@ -89,6 +89,7 @@ const FlashcardView = ({ cards, onClose, documentId }) => {
 
     return (
         <FocusTrap
+            active={true}
             focusTrapOptions={{
                 initialFocus: false,
                 escapeDeactivates: false,

@@ -126,6 +126,7 @@ const ChatInterface = ({ documentId, documentTitle, onClose }) => {
 
     return (
         <FocusTrap
+            active={true}
             focusTrapOptions={{
                 initialFocus: false,
                 escapeDeactivates: false,
