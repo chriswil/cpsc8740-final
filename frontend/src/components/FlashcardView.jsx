@@ -10,20 +10,10 @@ const FlashcardView = ({ cards, onClose, documentId }) => {
 
     useEffect(() => {
         startSession();
-
-        // Esc key handler
-        const handleEscape = (e) => {
-            if (e.key === 'Escape') {
-                onClose();
-            }
-        };
-        document.addEventListener('keydown', handleEscape);
-
         return () => {
             endSession();
-            document.removeEventListener('keydown', handleEscape);
         };
-    }, [onClose]);
+    }, []);
 
     const startSession = async () => {
         if (!documentId) return;
@@ -92,9 +82,9 @@ const FlashcardView = ({ cards, onClose, documentId }) => {
             active={true}
             focusTrapOptions={{
                 initialFocus: false,
-                escapeDeactivates: false,
-                clickOutsideDeactivates: false,
-                returnFocusOnDeactivate: true
+                escapeDeactivates: true,
+                onDeactivate: onClose,
+                clickOutsideDeactivates: false
             }}
         >
             <div

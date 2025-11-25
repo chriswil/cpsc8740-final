@@ -13,20 +13,10 @@ const ChatInterface = ({ documentId, documentTitle, onClose }) => {
     useEffect(() => {
         fetchHistory();
         startSession();
-
-        // Esc key handler
-        const handleEscape = (e) => {
-            if (e.key === 'Escape') {
-                onClose();
-            }
-        };
-        document.addEventListener('keydown', handleEscape);
-
         return () => {
             endSession();
-            document.removeEventListener('keydown', handleEscape);
         };
-    }, [documentId, onClose]);
+    }, [documentId]);
 
     const startSession = async () => {
         if (!documentId) return;
@@ -129,9 +119,9 @@ const ChatInterface = ({ documentId, documentTitle, onClose }) => {
             active={true}
             focusTrapOptions={{
                 initialFocus: false,
-                escapeDeactivates: false,
-                clickOutsideDeactivates: false,
-                returnFocusOnDeactivate: true
+                escapeDeactivates: true,
+                onDeactivate: onClose,
+                clickOutsideDeactivates: false
             }}
         >
             <div
