@@ -193,7 +193,8 @@ const DocumentList = ({ refreshTrigger }) => {
                         <div key={doc.id} className="bg-white p-4 rounded-lg shadow-sm border border-gray-100 hover:shadow-md transition-shadow relative group">
                             <button
                                 onClick={(e) => handleDelete(doc.id, e)}
-                                className="absolute top-2 right-2 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full opacity-0 group-hover:opacity-100 transition-all"
+                                aria-label={`Delete ${doc.filename}`}
+                                className="absolute top-2 right-2 p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-all focus:outline-none focus:ring-2 focus:ring-red-500"
                                 title="Delete document"
                             >
                                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -224,7 +225,8 @@ const DocumentList = ({ refreshTrigger }) => {
                             <div className="mt-4 flex space-x-2">
                                 <button
                                     onClick={() => setActiveChat({ id: doc.id, title: doc.filename })}
-                                    className="flex-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 flex items-center justify-center space-x-1"
+                                    aria-label={`Chat with ${doc.filename}`}
+                                    className="flex-1 px-3 py-1.5 text-xs font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200 flex items-center justify-center space-x-1 focus:outline-none focus:ring-2 focus:ring-gray-500"
                                 >
                                     <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
@@ -234,7 +236,8 @@ const DocumentList = ({ refreshTrigger }) => {
                                 <button
                                     onClick={() => initiateFlashcardGeneration(doc.id)}
                                     disabled={generatingState?.docId === doc.id}
-                                    className="flex-1 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 disabled:opacity-50"
+                                    aria-label={`Generate flashcards for ${doc.filename}`}
+                                    className="flex-1 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                 >
                                     {generatingState?.docId === doc.id && generatingState?.type === 'flashcards' ? (
                                         <>
@@ -249,7 +252,8 @@ const DocumentList = ({ refreshTrigger }) => {
                                 <button
                                     onClick={() => generateQuiz(doc.id)}
                                     disabled={generatingState?.docId === doc.id}
-                                    className="flex-1 px-3 py-1.5 text-xs font-medium text-purple-600 bg-purple-50 rounded-md hover:bg-purple-100 disabled:opacity-50"
+                                    aria-label={`Generate quiz for ${doc.filename}`}
+                                    className="flex-1 px-3 py-1.5 text-xs font-medium text-purple-600 bg-purple-50 rounded-md hover:bg-purple-100 disabled:opacity-50 focus:outline-none focus:ring-2 focus:ring-purple-500"
                                 >
                                     {generatingState?.docId === doc.id && generatingState?.type === 'quiz' ? (
                                         <>
