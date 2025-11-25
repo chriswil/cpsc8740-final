@@ -13,6 +13,10 @@ const DocumentList = ({ refreshTrigger }) => {
     const [generatingId, setGeneratingId] = useState(null);
     const [searchQuery, setSearchQuery] = useState('');
 
+    // Flashcard Configuration Modal State
+    const [flashcardConfig, setFlashcardConfig] = useState(null); // { docId: 1 }
+    const [flashcardCount, setFlashcardCount] = useState(5);
+
     useEffect(() => {
         fetchDocuments();
     }, [refreshTrigger]);
@@ -31,10 +35,19 @@ const DocumentList = ({ refreshTrigger }) => {
         }
     };
 
-    const generateFlashcards = async (docId) => {
+    const initiateFlashcardGeneration = (docId) => {
+        setFlashcardConfig({ docId });
+        setFlashcardCount(5); // Reset to default
+    };
+
+    const confirmGenerateFlashcards = async () => {
+        if (!flashcardConfig) return;
+        const docId = flashcardConfig.docId;
+        setFlashcardConfig(null); // Close modal
+
         setGeneratingId(docId);
         try {
-            const response = await fetch(`${API_BASE_URL}/api/study/flashcards/${docId}`, {
+            const response = await fetch(`${API_BASE_URL}/api/study/flashcards/${docId}?num_cards=${flashcardCount}`, {
                 method: 'POST'
             });
             if (response.ok) {
@@ -44,6 +57,9 @@ const DocumentList = ({ refreshTrigger }) => {
                 } else {
                     alert("No flashcards generated. Please check backend logs for errors.");
                 }
+            } else {
+                const errorData = await response.json();
+                alert(`Failed to generate flashcards: ${errorData.detail || 'Unknown error'}`);
             }
         } catch (error) {
             console.error('Error generating flashcards:', error);
@@ -51,6 +67,12 @@ const DocumentList = ({ refreshTrigger }) => {
         } finally {
             setGeneratingId(null);
         }
+    };
+
+    const generateFlashcards = async (docId) => {
+        // Legacy function kept for reference or direct calls if needed, 
+        // but UI now uses initiateFlashcardGeneration
+        initiateFlashcardGeneration(docId);
     };
 
     const generateQuiz = async (docId) => {
@@ -235,6 +257,44 @@ const DocumentList = ({ refreshTrigger }) => {
                     documentTitle={activeChat.title}
                     onClose={() => setActiveChat(null)}
                 />
+            )}
+
+            {/* Flashcard Configuration Modal */}
+            {flashcardConfig && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+                    <div className="bg-white rounded-xl shadow-xl w-full max-w-sm p-6">
+                        <h3 className="text-lg font-semibold text-gray-900 mb-4">Generate Flashcards</h3>
+                        <p className="text-sm text-gray-600 mb-4">How many flashcards would you like to generate?</p>
+
+                        <div className="mb-6">
+                            <label className="block text-sm font-medium text-gray-700 mb-2">Number of Cards</label>
+                            <select
+                                value={flashcardCount}
+                                onChange={(e) => setFlashcardCount(Number(e.target.value))}
+                                className="w-full border border-gray-300 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                            >
+                                <option value={5}>5 Cards</option>
+                                <option value={10}>10 Cards</option>
+                                <option value={15}>15 Cards</option>
+                            </select>
+                        </div>
+
+                        <div className="flex justify-end space-x-3">
+                            <button
+                                onClick={() => setFlashcardConfig(null)}
+                                className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-md hover:bg-gray-200"
+                            >
+                                Cancel
+                            </button>
+                            <button
+                                onClick={confirmGenerateFlashcards}
+                                className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700"
+                            >
+                                Generate
+                            </button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );
