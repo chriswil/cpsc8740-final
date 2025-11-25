@@ -70,9 +70,25 @@ const DocumentList = ({ refreshTrigger }) => {
     };
 
     const generateFlashcards = async (docId) => {
-        // Legacy function kept for reference or direct calls if needed, 
-        // but UI now uses initiateFlashcardGeneration
-        initiateFlashcardGeneration(docId);
+        setGeneratingId(docId);
+        try {
+            const response = await fetch(`${API_BASE_URL}/api/study/flashcards/${docId}`, {
+                method: 'POST'
+            });
+            if (response.ok) {
+                const data = await response.json();
+                if (data && data.length > 0) {
+                    setActiveFlashcards({ docId, cards: data });
+                } else {
+                    alert("No flashcards generated. Please check backend logs for errors.");
+                }
+            }
+        } catch (error) {
+            console.error('Error generating flashcards:', error);
+            alert('Failed to generate flashcards. Check console for details.');
+        } finally {
+            setGeneratingId(null);
+        }
     };
 
     const generateQuiz = async (docId) => {
@@ -216,7 +232,7 @@ const DocumentList = ({ refreshTrigger }) => {
                                     <span>Chat</span>
                                 </button>
                                 <button
-                                    onClick={() => generateFlashcards(doc.id)}
+                                    onClick={() => initiateFlashcardGeneration(doc.id)}
                                     disabled={generatingId === doc.id}
                                     className="flex-1 px-3 py-1.5 text-xs font-medium text-blue-600 bg-blue-50 rounded-md hover:bg-blue-100 disabled:opacity-50"
                                 >
