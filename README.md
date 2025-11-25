@@ -89,6 +89,9 @@ A unified platform that transforms how you learn from complex materials. By comb
 
 3.  Open [http://localhost:5173](http://localhost:5173) in your browser.
 
+4.  **API Documentation**
+    You can view the interactive API documentation (Swagger UI) at [http://localhost:8000/docs](http://localhost:8000/docs).
+
 ## 📄 License
 
 This project is for educational purposes as part of CPSC 8740.
