@@ -105,21 +105,22 @@ const UploadZone = ({ onUploadComplete }) => {
                     )}
                 </div>
                 <div>
-                    <p className="text-lg font-medium text-blue-900">
+                    <p className="font-medium text-blue-700 mb-1">
                         {isUploading ? 'Uploading...' : 'Upload Study Materials'}
                     </p>
                     <p className="text-sm text-blue-600">Drag & drop PDF, PPTX, or DOCX files here</p>
-                    {uploadMessage && (
-                        <p
-                            className={`mt-4 text-center text-sm ${uploadMessage.includes('success') ? 'text-green-600' : 'text-red-600'}`}
-                            role="status"
-                            aria-live="polite"
-                        >
-                            {uploadMessage}
-                        </p>
-                    )}
                 </div>
             </div>
+
+            {uploadMessage && (
+                <p
+                    className={`mt-4 text-center text-sm ${uploadMessage.includes('success') ? 'text-green-600' : 'text-red-600'}`}
+                    role="status"
+                    aria-live="polite"
+                >
+                    {uploadMessage}
+                </p>
+            )}
         </div>
     );
 };
