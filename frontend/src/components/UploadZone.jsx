@@ -4,6 +4,7 @@ import API_BASE_URL from '../config';
 const UploadZone = ({ onUploadComplete }) => {
     const [isDragging, setIsDragging] = useState(false);
     const [isUploading, setIsUploading] = useState(false);
+    const [uploadMessage, setUploadMessage] = useState('');
 
     const handleDrag = useCallback((e) => {
         e.preventDefault();
@@ -35,6 +36,7 @@ const UploadZone = ({ onUploadComplete }) => {
 
     const uploadFile = async (file) => {
         setIsUploading(true);
+        setUploadMessage('');
         const formData = new FormData();
         formData.append('file', file);
 
@@ -47,12 +49,17 @@ const UploadZone = ({ onUploadComplete }) => {
             if (response.ok) {
                 const data = await response.json();
                 console.log('Upload successful:', data);
+                setUploadMessage('Upload successful!');
                 if (onUploadComplete) onUploadComplete();
+                // Clear message after 3 seconds
+                setTimeout(() => setUploadMessage(''), 3000);
             } else {
                 console.error('Upload failed');
+                setUploadMessage('Upload failed. Please try again.');
             }
         } catch (error) {
             console.error('Error uploading file:', error);
+            setUploadMessage('Error uploading file. Please try again.');
         } finally {
             setIsUploading(false);
         }
