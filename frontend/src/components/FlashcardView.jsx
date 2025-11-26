@@ -80,7 +80,11 @@ const FlashcardView = ({ cards, onClose, documentId }) => {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden">
                 <div className="p-4 border-b flex justify-between items-center">
-                    <h3 className="text-lg font-semibold text-gray-900">Flashcards ({currentIndex + 1}/{cards.length})</h3>
+                    <h3 className="text-lg font-semibold text-gray-900">
+                        <span aria-live="polite" role="status">
+                            Flashcards ({currentIndex + 1}/{cards.length})
+                        </span>
+                    </h3>
                     <button
                         onClick={onClose}
                         aria-label="Close flashcard viewer"
