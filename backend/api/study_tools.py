@@ -75,8 +75,9 @@ def review_flashcard(card_id: int, review: ReviewData, db: Session = Depends(dat
 
 @router.get("/flashcards/due")
 def get_due_flashcards(db: Session = Depends(database.get_db)):
+    from sqlalchemy.orm import joinedload
     now = datetime.datetime.utcnow()
-    due_cards = db.query(models.Flashcard).filter(models.Flashcard.next_review <= now).all()
+    due_cards = db.query(models.Flashcard).options(joinedload(models.Flashcard.document)).filter(models.Flashcard.next_review <= now).all()
     return due_cards
 
 @router.post("/quiz/{document_id}")

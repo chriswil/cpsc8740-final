@@ -103,13 +103,23 @@ const FlashcardView = ({ cards, onClose, documentId }) => {
                     >
                         <div className={`relative w-full h-full transition-transform duration-500 transform-style-3d ${isFlipped ? 'rotate-y-180' : ''}`}>
                             {/* Front */}
-                            <div className={`absolute inset-0 backface-hidden bg-white rounded-xl shadow-md flex items-center justify-center p-8 text-center border-2 border-blue-100 ${isFlipped ? 'hidden' : ''}`}>
+                            <div className={`absolute inset-0 backface-hidden bg-white rounded-xl shadow-md flex flex-col items-center justify-center p-8 text-center border-2 border-blue-100 ${isFlipped ? 'hidden' : ''}`}>
+                                {cards[currentIndex].document && (
+                                    <span className="absolute top-4 left-4 px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
+                                        From: {cards[currentIndex].document.filename}
+                                    </span>
+                                )}
                                 <p className="text-xl font-medium text-gray-800">{cards[currentIndex].front}</p>
                                 <p className="absolute bottom-4 text-sm text-gray-400">Click to flip</p>
                             </div>
 
                             {/* Back */}
-                            <div className={`absolute inset-0 backface-hidden bg-blue-50 rounded-xl shadow-md flex items-center justify-center p-8 text-center border-2 border-blue-200 ${!isFlipped ? 'hidden' : ''}`}>
+                            <div className={`absolute inset-0 backface-hidden bg-blue-50 rounded-xl shadow-md flex flex-col items-center justify-center p-8 text-center border-2 border-blue-200 ${!isFlipped ? 'hidden' : ''}`}>
+                                {cards[currentIndex].document && (
+                                    <span className="absolute top-4 left-4 px-2 py-1 bg-gray-100 text-gray-600 text-xs rounded">
+                                        From: {cards[currentIndex].document.filename}
+                                    </span>
+                                )}
                                 <p className="text-xl text-gray-800">{cards[currentIndex].back}</p>
                             </div>
                         </div>
