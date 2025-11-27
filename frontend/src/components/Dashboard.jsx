@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
-import API_BASE_URL from '../config';
+import { authenticatedFetch } from '../utils/api';
 import FlashcardView from './FlashcardView';
 
 const Dashboard = () => {
@@ -14,7 +14,7 @@ const Dashboard = () => {
         const fetchStats = async () => {
             try {
                 const offset = new Date().getTimezoneOffset();
-                const response = await fetch(`${API_BASE_URL}/api/analytics/stats?timezone_offset=${offset}`);
+                const response = await authenticatedFetch(`/api/analytics/stats?timezone_offset=${offset}`);
                 if (response.ok) {
                     const data = await response.json();
                     setStats(data);
@@ -28,7 +28,7 @@ const Dashboard = () => {
 
         const fetchDueCards = async () => {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/study/flashcards/due`);
+                const response = await authenticatedFetch('/api/study/flashcards/due');
                 if (response.ok) {
                     const data = await response.json();
                     setDueCards(data);
@@ -190,7 +190,7 @@ const Dashboard = () => {
                         // Refresh due count after review
                         const fetchDueCards = async () => {
                             try {
-                                const response = await fetch(`${API_BASE_URL}/api/study/flashcards/due`);
+                                const response = await authenticatedFetch('/api/study/flashcards/due');
                                 if (response.ok) {
                                     const data = await response.json();
                                     setDueCards(data);

@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import API_BASE_URL from '../config';
+import { authenticatedFetch } from '../utils/api';
 
 const UploadZone = ({ onUploadComplete }) => {
     const [isDragging, setIsDragging] = useState(false);
@@ -41,7 +41,7 @@ const UploadZone = ({ onUploadComplete }) => {
         formData.append('file', file);
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/documents/upload`, {
+            const response = await authenticatedFetch('/api/documents/upload', {
                 method: 'POST',
                 body: formData,
             });

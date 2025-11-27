@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import FlashcardView from './FlashcardView';
 import QuizView from './QuizView';
 import ChatInterface from './ChatInterface';
-import API_BASE_URL from '../config';
+import { authenticatedFetch } from '../utils/api';
 
 const DocumentList = ({ refreshTrigger }) => {
     const [documents, setDocuments] = useState([]);
@@ -23,7 +23,7 @@ const DocumentList = ({ refreshTrigger }) => {
 
     const fetchDocuments = async () => {
         try {
-            const response = await fetch(`${API_BASE_URL}/api/documents/`);
+            const response = await authenticatedFetch('/api/documents/');
             if (response.ok) {
                 const data = await response.json();
                 setDocuments(data);
@@ -47,7 +47,7 @@ const DocumentList = ({ refreshTrigger }) => {
 
         setGeneratingState({ docId, type: 'flashcards' });
         try {
-            const response = await fetch(`${API_BASE_URL}/api/study/flashcards/${docId}?num_cards=${flashcardCount}`, {
+            const response = await authenticatedFetch(`/api/study/flashcards/${docId}?num_cards=${flashcardCount}`, {
                 method: 'POST'
             });
             if (response.ok) {
@@ -72,7 +72,7 @@ const DocumentList = ({ refreshTrigger }) => {
     const generateFlashcards = async (docId) => {
         setGeneratingState({ docId, type: 'flashcards' });
         try {
-            const response = await fetch(`${API_BASE_URL}/api/study/flashcards/${docId}`, {
+            const response = await authenticatedFetch(`/api/study/flashcards/${docId}`, {
                 method: 'POST'
             });
             if (response.ok) {
@@ -94,7 +94,7 @@ const DocumentList = ({ refreshTrigger }) => {
     const generateQuiz = async (docId) => {
         setGeneratingState({ docId, type: 'quiz' });
         try {
-            const response = await fetch(`${API_BASE_URL}/api/study/quiz/${docId}`, {
+            const response = await authenticatedFetch(`/api/study/quiz/${docId}`, {
                 method: 'POST'
             });
             if (response.ok) {
@@ -118,7 +118,7 @@ const DocumentList = ({ refreshTrigger }) => {
         if (!window.confirm('Are you sure you want to delete this document?')) return;
 
         try {
-            const response = await fetch(`${API_BASE_URL}/api/documents/${docId}`, {
+            const response = await authenticatedFetch(`/api/documents/${docId}`, {
                 method: 'DELETE'
             });
 
@@ -138,7 +138,7 @@ const DocumentList = ({ refreshTrigger }) => {
         const newCategory = prompt("Enter new category:", currentCategory);
         if (newCategory && newCategory !== currentCategory) {
             try {
-                const response = await fetch(`${API_BASE_URL}/api/documents/${docId}/category?category=${encodeURIComponent(newCategory)}`, {
+                const response = await authenticatedFetch(`/api/documents/${docId}/category?category=${encodeURIComponent(newCategory)}`, {
                     method: 'PUT'
                 });
 
@@ -271,7 +271,6 @@ const DocumentList = ({ refreshTrigger }) => {
                 </div>
             )}
 
-            {/* Modals */}
             {/* Modals */}
             {activeFlashcards && (
                 <FlashcardView

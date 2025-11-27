@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from typing import List
 import models, schemas, database
 from services import parser, ai
+from models import User
+from middleware import get_current_user
 import datetime
 
 router = APIRouter(
@@ -14,10 +16,14 @@ router = APIRouter(
 async def send_message(
     document_id: int, 
     message: schemas.ChatMessageCreate, 
-    db: Session = Depends(database.get_db)
+    db: Session = Depends(database.get_db),
+    current_user: User = Depends(get_current_user)
 ):
-    # 1. Verify document exists
-    document = db.query(models.Document).filter(models.Document.id == document_id).first()
+    # 1. Verify document exists and belongs to user
+    document = db.query(models.Document).filter(
+        models.Document.id == document_id,
+        models.Document.user_id == current_user.id
+    ).first()
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
     
@@ -65,7 +71,19 @@ async def send_message(
     return ai_msg
 
 @router.get("/history/{document_id}", response_model=List[schemas.ChatMessage])
-async def get_chat_history(document_id: int, db: Session = Depends(database.get_db)):
+async def get_chat_history(
+    document_id: int, 
+    db: Session = Depends(database.get_db),
+    current_user: User = Depends(get_current_user)
+):
+    # Verify document belongs to user
+    document = db.query(models.Document).filter(
+        models.Document.id == document_id,
+        models.Document.user_id == current_user.id
+    ).first()
+    if not document:
+        raise HTTPException(status_code=404, detail="Document not found")
+    
     messages = db.query(models.ChatMessage).filter(
         models.ChatMessage.document_id == document_id
     ).order_by(models.ChatMessage.timestamp.asc()).all()

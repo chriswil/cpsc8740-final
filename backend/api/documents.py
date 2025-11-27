@@ -3,9 +3,10 @@ from sqlalchemy.orm import Session
 from typing import List
 import shutil
 import os
-from models import Document
+from models import Document, User
 import models, schemas, database
 from services import parser, ai
+from middleware import get_current_user
 
 router = APIRouter(
     prefix="/api/documents",
@@ -15,7 +16,11 @@ router = APIRouter(
 UPLOAD_DIR = "backend/uploads"
 
 @router.post("/upload", response_model=schemas.Document)
-async def upload_document(file: UploadFile = File(...), db: Session = Depends(database.get_db)):
+async def upload_document(
+    file: UploadFile = File(...), 
+    db: Session = Depends(database.get_db),
+    current_user: User = Depends(get_current_user)
+):
     # Create upload directory if it doesn't exist
     os.makedirs(UPLOAD_DIR, exist_ok=True)
     
@@ -43,7 +48,8 @@ async def upload_document(file: UploadFile = File(...), db: Session = Depends(da
         filename=file.filename,
         file_path=file_path,
         file_type=file_type,
-        category=category
+        category=category,
+        user_id=current_user.id
     )
     
     db.add(db_document)
@@ -53,13 +59,28 @@ async def upload_document(file: UploadFile = File(...), db: Session = Depends(da
     return db_document
 
 @router.get("/", response_model=List[schemas.Document])
-def read_documents(skip: int = 0, limit: int = 100, db: Session = Depends(database.get_db)):
-    documents = db.query(models.Document).offset(skip).limit(limit).all()
+def read_documents(
+    skip: int = 0, 
+    limit: int = 100, 
+    db: Session = Depends(database.get_db),
+    current_user: User = Depends(get_current_user)
+):
+    documents = db.query(models.Document).filter(
+        models.Document.user_id == current_user.id
+    ).offset(skip).limit(limit).all()
     return documents
 
 @router.put("/{document_id}/category", response_model=schemas.Document)
-async def update_category(document_id: int, category: str, db: Session = Depends(database.get_db)):
-    document = db.query(models.Document).filter(models.Document.id == document_id).first()
+async def update_category(
+    document_id: int, 
+    category: str, 
+    db: Session = Depends(database.get_db),
+    current_user: User = Depends(get_current_user)
+):
+    document = db.query(models.Document).filter(
+        models.Document.id == document_id,
+        models.Document.user_id == current_user.id
+    ).first()
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
     
@@ -69,8 +90,15 @@ async def update_category(document_id: int, category: str, db: Session = Depends
     return document
 
 @router.delete("/{document_id}")
-def delete_document(document_id: int, db: Session = Depends(database.get_db)):
-    document = db.query(models.Document).filter(models.Document.id == document_id).first()
+def delete_document(
+    document_id: int, 
+    db: Session = Depends(database.get_db),
+    current_user: User = Depends(get_current_user)
+):
+    document = db.query(models.Document).filter(
+        models.Document.id == document_id,
+        models.Document.user_id == current_user.id
+    ).first()
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
     

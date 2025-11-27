@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import API_BASE_URL from '../config';
+import { authenticatedFetch } from '../utils/api';
 
 const FlashcardView = ({ cards, onClose, documentId }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -17,7 +17,7 @@ const FlashcardView = ({ cards, onClose, documentId }) => {
     const startSession = async () => {
         if (!documentId) return;
         try {
-            const response = await fetch(`${API_BASE_URL}/api/analytics/session/start`, {
+            const response = await authenticatedFetch('/api/analytics/session/start', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -37,7 +37,7 @@ const FlashcardView = ({ cards, onClose, documentId }) => {
     const endSession = async () => {
         if (!sessionIdRef.current) return;
         try {
-            await fetch(`${API_BASE_URL}/api/analytics/session/end`, {
+            await authenticatedFetch('/api/analytics/session/end', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ session_id: sessionIdRef.current }),
@@ -63,7 +63,7 @@ const FlashcardView = ({ cards, onClose, documentId }) => {
         if (!currentCard.id) return;
 
         try {
-            await fetch(`${API_BASE_URL}/api/study/flashcards/${currentCard.id}/review`, {
+            await authenticatedFetch(`/api/study/flashcards/${currentCard.id}/review`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ grade })

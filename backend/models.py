@@ -4,10 +4,33 @@ from sqlalchemy.orm import relationship
 import datetime
 from database import Base
 
+class User(Base):
+    __tablename__ = "users"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    username = Column(String, unique=True, index=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    
+    # Relationships
+    documents = relationship("Document", back_populates="user", cascade="all, delete-orphan")
+    sessions = relationship("Session", back_populates="user", cascade="all, delete-orphan")
+
+class Session(Base):
+    __tablename__ = "sessions"
+    
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    token = Column(String, unique=True, index=True, nullable=False)
+    created_at = Column(DateTime, default=datetime.datetime.utcnow)
+    expires_at = Column(DateTime, nullable=False)
+    
+    user = relationship("User", back_populates="sessions")
+
 class Document(Base):
     __tablename__ = "documents"
 
     id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     filename = Column(String, index=True)
     file_path = Column(String)
     file_type = Column(String)
@@ -15,7 +38,8 @@ class Document(Base):
     category = Column(String, default="Uncategorized")
     summary = Column(String, nullable=True)
     
-    # Relationship to chat messages
+    # Relationships
+    user = relationship("User", back_populates="documents")
     chat_messages = relationship("ChatMessage", back_populates="document", cascade="all, delete-orphan")
 
 class ChatMessage(Base):

@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from typing import List, Dict, Any
 import models, database
 from services import parser, ai
+from models import User
+from middleware import get_current_user
 import os
 import datetime
 
@@ -12,8 +14,16 @@ router = APIRouter(
 )
 
 @router.post("/flashcards/{document_id}")
-async def create_flashcards(document_id: int, num_cards: int = 5, db: Session = Depends(database.get_db)):
-    document = db.query(models.Document).filter(models.Document.id == document_id).first()
+async def create_flashcards(
+    document_id: int, 
+    num_cards: int = 5, 
+    db: Session = Depends(database.get_db),
+    current_user: User = Depends(get_current_user)
+):
+    document = db.query(models.Document).filter(
+        models.Document.id == document_id,
+        models.Document.user_id == current_user.id
+    ).first()
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
     
@@ -53,8 +63,17 @@ class ReviewData(BaseModel):
     grade: int # 0-5
 
 @router.post("/flashcards/{card_id}/review")
-def review_flashcard(card_id: int, review: ReviewData, db: Session = Depends(database.get_db)):
-    card = db.query(models.Flashcard).filter(models.Flashcard.id == card_id).first()
+def review_flashcard(
+    card_id: int, 
+    review: ReviewData, 
+    db: Session = Depends(database.get_db),
+    current_user: User = Depends(get_current_user)
+):
+    # Get card and verify it belongs to user's document
+    card = db.query(models.Flashcard).join(models.Document).filter(
+        models.Flashcard.id == card_id,
+        models.Document.user_id == current_user.id
+    ).first()
     if not card:
         raise HTTPException(status_code=404, detail="Card not found")
         
@@ -74,15 +93,30 @@ def review_flashcard(card_id: int, review: ReviewData, db: Session = Depends(dat
     return result
 
 @router.get("/flashcards/due")
-def get_due_flashcards(db: Session = Depends(database.get_db)):
+def get_due_flashcards(
+    db: Session = Depends(database.get_db),
+    current_user: User = Depends(get_current_user)
+):
     from sqlalchemy.orm import joinedload
     now = datetime.datetime.utcnow()
-    due_cards = db.query(models.Flashcard).options(joinedload(models.Flashcard.document)).filter(models.Flashcard.next_review <= now).all()
+    due_cards = db.query(models.Flashcard).join(models.Document).options(
+        joinedload(models.Flashcard.document)
+    ).filter(
+        models.Flashcard.next_review <= now,
+        models.Document.user_id == current_user.id
+    ).all()
     return due_cards
 
 @router.post("/quiz/{document_id}")
-async def create_quiz(document_id: int, db: Session = Depends(database.get_db)):
-    document = db.query(models.Document).filter(models.Document.id == document_id).first()
+async def create_quiz(
+    document_id: int, 
+    db: Session = Depends(database.get_db),
+    current_user: User = Depends(get_current_user)
+):
+    document = db.query(models.Document).filter(
+        models.Document.id == document_id,
+        models.Document.user_id == current_user.id
+    ).first()
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
     

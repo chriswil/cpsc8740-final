@@ -5,6 +5,8 @@ from typing import List, Dict, Any
 import datetime
 from pydantic import BaseModel
 import models, database
+from models import User
+from middleware import get_current_user
 
 router = APIRouter(
     prefix="/api/analytics",
@@ -27,9 +29,16 @@ class SessionResponse(BaseModel):
     duration_seconds: int
 
 @router.post("/session/start", response_model=SessionResponse)
-def start_session(session_data: SessionStart, db: Session = Depends(database.get_db)):
-    # Check if document exists
-    document = db.query(models.Document).filter(models.Document.id == session_data.document_id).first()
+def start_session(
+    session_data: SessionStart, 
+    db: Session = Depends(database.get_db),
+    current_user: User = Depends(get_current_user)
+):
+    # Check if document exists and belongs to user
+    document = db.query(models.Document).filter(
+        models.Document.id == session_data.document_id,
+        models.Document.user_id == current_user.id
+    ).first()
     if not document:
         raise HTTPException(status_code=404, detail="Document not found")
         
@@ -46,8 +55,16 @@ def start_session(session_data: SessionStart, db: Session = Depends(database.get
     return new_session
 
 @router.post("/session/end", response_model=SessionResponse)
-def end_session(session_data: SessionEnd, db: Session = Depends(database.get_db)):
-    session = db.query(models.StudySession).filter(models.StudySession.id == session_data.session_id).first()
+def end_session(
+    session_data: SessionEnd, 
+    db: Session = Depends(database.get_db),
+    current_user: User = Depends(get_current_user)
+):
+    # Verify session belongs to user's document
+    session = db.query(models.StudySession).join(models.Document).filter(
+        models.StudySession.id == session_data.session_id,
+        models.Document.user_id == current_user.id
+    ).first()
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
         
@@ -71,14 +88,25 @@ def end_session(session_data: SessionEnd, db: Session = Depends(database.get_db)
     return session
 
 @router.get("/stats")
-def get_stats(timezone_offset: int = 0, db: Session = Depends(database.get_db)):
+def get_stats(
+    timezone_offset: int = 0, 
+    db: Session = Depends(database.get_db),
+    current_user: User = Depends(get_current_user)
+):
+    # Filter all queries by user's documents
     # 1. Total Study Time
-    total_seconds = db.query(func.sum(models.StudySession.duration_seconds)).scalar() or 0
+    total_seconds = db.query(func.sum(models.StudySession.duration_seconds)).join(
+        models.Document
+    ).filter(
+        models.Document.user_id == current_user.id
+    ).scalar() or 0
     
     # 2. Activity Breakdown
     breakdown = db.query(
         models.StudySession.activity_type, 
         func.count(models.StudySession.id)
+    ).join(models.Document).filter(
+        models.Document.user_id == current_user.id
     ).group_by(models.StudySession.activity_type).all()
     
     activity_stats = {type_: count for type_, count in breakdown}
@@ -93,7 +121,9 @@ def get_stats(timezone_offset: int = 0, db: Session = Depends(database.get_db)):
     
     # 3. Current Streak
     # Get all unique dates where a session occurred, converted to LOCAL time
-    sessions = db.query(models.StudySession.start_time).order_by(models.StudySession.start_time.desc()).all()
+    sessions = db.query(models.StudySession.start_time).join(models.Document).filter(
+        models.Document.user_id == current_user.id
+    ).order_by(models.StudySession.start_time.desc()).all()
     
     streak = 0
     if sessions:
@@ -171,9 +201,12 @@ def get_stats(timezone_offset: int = 0, db: Session = Depends(database.get_db)):
         # Ensure db timestamps are treated as UTC for comparison if they are naive
         # (SQLAlchemy + SQLite often returns naive datetimes)
         
-        daily_sum = db.query(func.sum(models.StudySession.duration_seconds)).filter(
+        daily_sum = db.query(func.sum(models.StudySession.duration_seconds)).join(
+            models.Document
+        ).filter(
             models.StudySession.start_time >= start_of_day_utc,
-            models.StudySession.start_time < end_of_day_utc
+            models.StudySession.start_time < end_of_day_utc,
+            models.Document.user_id == current_user.id
         ).scalar() or 0
         
         daily_stats.append({
