@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell } from 'recharts';
 import API_BASE_URL from '../config';
+import FlashcardView from './FlashcardView';
 
 const Dashboard = () => {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [dueCount, setDueCount] = useState(0);
+    const [dueCards, setDueCards] = useState([]);
+    const [showReview, setShowReview] = useState(false);
 
     useEffect(() => {
         const fetchStats = async () => {
@@ -28,6 +31,7 @@ const Dashboard = () => {
                 const response = await fetch(`${API_BASE_URL}/api/study/flashcards/due`);
                 if (response.ok) {
                     const data = await response.json();
+                    setDueCards(data);
                     setDueCount(data.length);
                 }
             } catch (error) {
@@ -89,12 +93,22 @@ const Dashboard = () => {
 
                 {/* Due Cards Card */}
                 <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
-                    <div className="flex items-center justify-between">
-                        <div>
-                            <p className="text-sm text-gray-500">Due for Review</p>
-                            <p className="text-3xl font-bold text-blue-600">{dueCount} <span className="text-lg">cards</span></p>
+                    <div className="flex flex-col">
+                        <div className="flex items-center justify-between mb-3">
+                            <div>
+                                <p className="text-sm text-gray-500">Due for Review</p>
+                                <p className="text-3xl font-bold text-blue-600">{dueCount} <span className="text-lg">cards</span></p>
+                            </div>
+                            <div className="text-4xl">🧠</div>
                         </div>
-                        <div className="text-4xl">🧠</div>
+                        {dueCount > 0 && (
+                            <button
+                                onClick={() => setShowReview(true)}
+                                className="mt-2 w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm font-medium"
+                            >
+                                Review Now →
+                            </button>
+                        )}
                     </div>
                 </div>
 
@@ -166,6 +180,31 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+
+            {/* FlashcardView Modal */}
+            {showReview && dueCards.length > 0 && (
+                <FlashcardView
+                    cards={dueCards}
+                    onClose={() => {
+                        setShowReview(false);
+                        // Refresh due count after review
+                        const fetchDueCards = async () => {
+                            try {
+                                const response = await fetch(`${API_BASE_URL}/api/study/flashcards/due`);
+                                if (response.ok) {
+                                    const data = await response.json();
+                                    setDueCards(data);
+                                    setDueCount(data.length);
+                                }
+                            } catch (error) {
+                                console.error('Error fetching due cards:', error);
+                            }
+                        };
+                        fetchDueCards();
+                    }}
+                    documentId={null}
+                />
+            )}
         </div>
     );
 };
