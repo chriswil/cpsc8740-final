@@ -19,7 +19,7 @@ anthropic_client = None
 if AI_PROVIDER == "anthropic" and ANTHROPIC_API_KEY:
     anthropic_client = Anthropic(api_key=ANTHROPIC_API_KEY)
 
-def generate_flashcards(text: str, num_cards: int = 5) -> List[Dict[str, str]]:
+def generate_flashcards(text: str, num_cards: int = 5, exclude_topics: List[str] = None) -> List[Dict[str, str]]:
     """
     Generate flashcards using the configured AI provider.
     """
@@ -28,10 +28,22 @@ def generate_flashcards(text: str, num_cards: int = 5) -> List[Dict[str, str]]:
     
     system_prompt = "You are a helpful study assistant. You MUST return a valid JSON array of objects. Do not include any other text."
     
+    # Build the exclusion instruction if topics are provided
+    exclusion_text = ""
+    if exclude_topics:
+        topics_list = "\n".join([f"- {topic}" for topic in exclude_topics])
+        exclusion_text = f"""
+    IMPORTANT: The following topics have already been covered in previous flashcard sets.
+    You MUST generate flashcards on DIFFERENT concepts and topics:
+    {topics_list}
+    
+    Focus on NEW aspects, alternative perspectives, or related but distinct concepts.
+    """
+    
     prompt = f"""
     Generate EXACTLY {num_cards} flashcards based on the following text.
     Return ONLY a JSON array of objects with 'front' and 'back' keys.
-    
+    {exclusion_text}
     Example JSON format:
     [
         {{"front": "Question 1", "back": "Answer 1"}},

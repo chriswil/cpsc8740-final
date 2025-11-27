@@ -22,13 +22,12 @@ async def create_flashcards(document_id: int, num_cards: int = 5, db: Session = 
     if not text:
         raise HTTPException(status_code=400, detail="Could not extract text from document")
     
-    # Check if flashcards already exist
+    # Query existing flashcards to avoid duplicates
     existing_cards = db.query(models.Flashcard).filter(models.Flashcard.document_id == document_id).all()
-    if existing_cards:
-        return existing_cards
+    exclude_topics = [card.front for card in existing_cards] if existing_cards else None
 
-    # Generate flashcards
-    flashcards_data = ai.generate_flashcards(text, num_cards=num_cards)
+    # Generate flashcards with exclusion list
+    flashcards_data = ai.generate_flashcards(text, num_cards=num_cards, exclude_topics=exclude_topics)
     
     # Save to DB
     new_cards = []
