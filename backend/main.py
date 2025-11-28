@@ -7,6 +7,38 @@ from api import documents, study_tools, chat, analytics, auth
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
+# Auto-sync users from environment variables on startup
+def sync_users_from_env():
+    """Create users from environment variables if they don't exist"""
+    from database import SessionLocal
+    from models import User
+    
+    db = SessionLocal()
+    try:
+        i = 1
+        while True:
+            username = os.getenv(f"USER_{i}_USERNAME")
+            if not username:
+                break
+            
+            # Check if user exists
+            existing_user = db.query(User).filter(User.username == username).first()
+            if not existing_user:
+                user = User(username=username)
+                db.add(user)
+                print(f"✅ Created user: {username}")
+            
+            i += 1
+        
+        db.commit()
+    except Exception as e:
+        print(f"❌ Error syncing users: {e}")
+        db.rollback()
+    finally:
+        db.close()
+
+sync_users_from_env()
+
 app = FastAPI(title="AI Study Assistant API")
 
 # Configure CORS
