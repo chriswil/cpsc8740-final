@@ -114,12 +114,6 @@ function Login({ onLoginSuccess }) {
                         </button>
                     </div>
                 </form>
-
-                <div className="mt-4 text-center text-sm text-gray-600">
-                    <p>Demo accounts:</p>
-                    <p className="mt-1">demo / demo8740!</p>
-                    <p>student / student8740!</p>
-                </div>
             </div>
         </div>
     );
