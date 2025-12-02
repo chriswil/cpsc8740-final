@@ -13,7 +13,7 @@ router = APIRouter(
     tags=["documents"]
 )
 
-UPLOAD_DIR = "backend/uploads"
+UPLOAD_DIR = os.path.join(os.getcwd(), "backend", "uploads")
 
 @router.post("/upload", response_model=schemas.Document)
 async def upload_document(
