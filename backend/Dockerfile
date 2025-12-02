@@ -11,10 +11,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 COPY . .
 
 # Create uploads directory
-RUN mkdir -p /app/backend/uploads
+RUN mkdir -p /app/uploads
 
 # Expose port 8000
 EXPOSE 8000
 
-# Run the application from the correct directory
-CMD ["sh", "-c", "cd /app && uvicorn main:app --host 0.0.0.0 --port 8000"]
+# Run the application
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
